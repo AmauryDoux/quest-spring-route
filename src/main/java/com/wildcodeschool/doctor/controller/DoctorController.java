@@ -1,17 +1,30 @@
 package com.wildcodeschool.doctor.controller;
 
 import com.wildcodeschool.doctor.model.Doctor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.server.ResponseStatusException;
 
 @Controller
 public class DoctorController {
 
-    @GetMapping("/doctor/")
+    @GetMapping("/doctor/{number}")
     @ResponseBody
-    public Doctor doctor() {
-
-        return null;
+    public Doctor doctor(@PathVariable int number) {
+        Doctor response;
+        if (number < 0 || number > 13) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "\n" +
+                    "Impossible to recover the incarnation " + number);
+        }
+        else if(number == 13){
+            response = new Doctor(13, "Jodie Whittaker");
+        }
+        else{
+            throw new ResponseStatusException(HttpStatus.SEE_OTHER, "Status 303");
+        }
+        return response;
     }
 }
